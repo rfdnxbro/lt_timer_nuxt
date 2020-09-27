@@ -1,11 +1,9 @@
 <template>
   <v-app dark>
     <v-app-bar
-      :clipped-left="clipped"
-      fixed
       app
     >
-    LT Timer
+      LT Timer
     </v-app-bar>
     <v-main>
       <v-container>
@@ -13,7 +11,6 @@
       </v-container>
     </v-main>
     <v-footer
-      :absolute="!fixed"
       app
     >
       <span>&copy; {{ new Date().getFullYear() }}</span>
