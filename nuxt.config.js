@@ -64,5 +64,8 @@ export default {
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {
+  },
+  manifest: {
+    gcm_sender_id: '103953800507'
   }
 }
