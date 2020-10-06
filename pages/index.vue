@@ -63,9 +63,13 @@ export default {
     get_color (timer) {
       const current = new Date()
       const begin = new Date(timer.starts_at)
+      const begin10m = new Date(timer.starts_at)
+      begin10m.setMinutes(begin10m.getMinutes() - 10)
       const end = new Date(timer.ends_at)
       if (begin <= current && end >= current) {
         return 'red'
+      } else if (begin >= current && begin10m <= current) {
+        return 'pink lighten-4'
       }
 
       return 'white'
