@@ -90,4 +90,4 @@ sw.*
 *.swp
 
 # firebase
-firebase/
+.firebase/
