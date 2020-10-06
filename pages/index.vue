@@ -20,6 +20,7 @@ import 'firebase/messaging'
 export default {
   beforeMount () {
     const messaging = firebase.messaging()
+    messaging.usePublicVapidKey('BDg0GzH0pqQQ_UG0aiLUqTff4t88Ke3rZlGfsj3BhnvZxmm-c-MeGKZYSB9LJgh66z5CeVW5Z_igjsfYD9o0FSE')
     messaging.requestPermission()
       .then(() => {
         return messaging.getToken()
@@ -30,9 +31,6 @@ export default {
       .catch((error) => {
         console.log(error)
       })
-    messaging.onMessage((payload) => {
-      console.log('message: ', payload)
-    })
   }
 }
 </script>
