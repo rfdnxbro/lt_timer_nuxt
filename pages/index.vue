@@ -14,22 +14,25 @@
 </template>
 
 <script>
+import firebase from 'firebase/app'
+import 'firebase/messaging'
+
 export default {
- // created () {
- //   const messaging = firebase.messaging()
- //   messaging.requestPermission()
- //     .then(() => {
- //       return messaging.getToken()
- //     })
- //     .then((token) => {
- //       console.log(token)
- //     })
- //     .catch((error) => {
- //       console.log(error)
- //     })
- //   messaging.onMessage((payload) => {
- //     console.log('message: ', payload)
- //   })
- // }
+  beforeMount () {
+    const messaging = firebase.messaging()
+    messaging.requestPermission()
+      .then(() => {
+        return messaging.getToken()
+      })
+      .then((token) => {
+        console.log(token)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    messaging.onMessage((payload) => {
+      console.log('message: ', payload)
+    })
+  }
 }
 </script>
