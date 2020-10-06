@@ -13,6 +13,7 @@
             <v-timeline-item
               v-for="(timer, key) in timers"
               :key="key"
+              :color="get_color(timer)"
               small
             >
               <div>
@@ -58,6 +59,16 @@ export default {
     time_format (time) {
       const date = new Date(time)
       return date.getHours() + ':' + ('00' + date.getMinutes()).slice(-2)
+    },
+    get_color (timer) {
+      const current = new Date()
+      const begin = new Date(timer.starts_at)
+      const end = new Date(timer.ends_at)
+      if (begin <= current && end >= current) {
+        return 'red'
+      }
+
+      return 'white'
     }
   }
 }
