@@ -13,12 +13,12 @@
             <v-timeline-item
               v-for="(timer, key) in timers"
               :key="key"
-              :color="get_color(timer)"
+              :color="getColor(timer)"
               small
             >
               <div>
                 <div class="font-weight-normal">
-                  {{ time_format(timer.starts_at) }}-{{ time_format(timer.ends_at) }}
+                  {{ timeFormat(timer.starts_at) }}-{{ timeFormat(timer.ends_at) }}
                   <strong>{{ timer.title }}</strong>
                 </div>
               </div>
@@ -49,18 +49,24 @@ export default {
         return messaging.getToken()
       })
       .then((token) => {
-        // console.log(token)
+        this.postToken(token)
       })
       .catch(() => {
         alert('通知を利用できません。URLバーの鍵アイコンから通知を許可に設定してください。')
       })
+    // トークン更新のモニタリング
+    messaging.onTokenRefresh(() => {
+      messaging.getToken().then((refreshedToken) => {
+        this.postToken(refreshedToken)
+      })
+    })
   },
   methods: {
-    time_format (time) {
+    timeFormat (time) {
       const date = new Date(time)
       return date.getHours() + ':' + ('00' + date.getMinutes()).slice(-2)
     },
-    get_color (timer) {
+    getColor (timer) {
       const current = new Date()
       const begin = new Date(timer.starts_at)
       const begin10m = new Date(timer.starts_at)
@@ -73,6 +79,10 @@ export default {
       }
 
       return 'white'
+    },
+    async postToken (token) {
+      const response = await this.$axios.$post('https://lt-timer-go.herokuapp.com/api/tokens', { token })
+      return response
     }
   }
 }
