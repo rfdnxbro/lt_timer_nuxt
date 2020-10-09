@@ -51,7 +51,7 @@ export default {
     const response = await $axios.get('https://lt-timer-go.herokuapp.com/api/timers')
     const clientTime = new Date()
     const serverTime = new Date(response.headers.date)
-    const diff = serverTime.getTime() - clientTime.getTime()
+    const diff = serverTime.getTime() - clientTime.getTime() + 1 // 時刻の微妙なズレ1秒加算
 
     return {
       timers: response.data,
