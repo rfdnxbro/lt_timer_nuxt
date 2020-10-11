@@ -24,6 +24,9 @@
                   <span v-if="isNearFuture(timer.starts_at, timer.ends_at)">
                     開始まであと{{ getRemainSeconds(timer.starts_at) }}秒<br>
                   </span>
+                  <span v-if="!isToday(timer.starts_at)">
+                    {{ dateFormat(timer.starts_at) }}
+                  </span>
                   {{ timeFormat(timer.starts_at) }}-{{ timeFormat(timer.ends_at) }}
                   <strong>{{ timer.title }}</strong><br>
                   <v-progress-linear v-if="isPast(timer.ends_at)" value="0" />
@@ -36,6 +39,49 @@
               </div>
             </v-timeline-item>
           </v-timeline>
+        </v-card-text>
+      </v-card>
+      <br>
+      <v-card>
+        <v-card-title class="headline">
+          How to Use
+        </v-card-title>
+        <v-card-text>
+          <ul>
+            <li>
+              タイマーの
+              <ul>
+                <li>開始1分前</li>
+                <li>開始時</li>
+                <li>終了1分前</li>
+                <li>終了時</li>
+              </ul>
+              のタイミングで通知及びカウントダウンがされます
+            </li>
+            <li>
+              一度通知設定をしていれば、ブラウザを閉じていても通知されます
+            </li>
+          </ul>
+        </v-card-text>
+      </v-card>
+      <br>
+      <v-card>
+        <v-card-title class="headline">
+          Settings
+        </v-card-title>
+        <v-card-text>
+          <ul>
+            <li>
+              ページを開いた際のダイアログで通知の許可をしてください
+            </li>
+            <li>
+              もし閉じてしまったり拒否をしてしまった場合は、以下画像を参考にURLバーの鍵アイコンをクリックし、通知「許可」に変更してください
+            </li>
+            <li>
+              逆に通知を切りたい時も、同様の操作で「ブロック」を選択してください
+            </li>
+          </ul>
+          <img src="images/notification.png" width="300" height="179">
         </v-card-text>
       </v-card>
     </v-col>
@@ -51,7 +97,7 @@ export default {
     const response = await $axios.get('https://lt-timer-go.herokuapp.com/api/timers')
     const clientTime = new Date()
     const serverTime = new Date(response.headers.date)
-    const diff = serverTime.getTime() - clientTime.getTime() + 1 // 時刻の微妙なズレ1秒加算
+    const diff = serverTime.getTime() - clientTime.getTime() + 1000 // 時刻の微妙なズレ1秒加算
 
     return {
       timers: response.data,
@@ -91,6 +137,10 @@ export default {
       const date = new Date(time)
       return date.getHours() + ':' + ('00' + date.getMinutes()).slice(-2)
     },
+    dateFormat (time) {
+      const date = new Date(time)
+      return `${date.getFullYear()}/${date.getMonth() + 1}/${date.getDate()}`
+    },
     timeFormatWithSec (time) {
       const date = new Date(time)
       return date.getHours() + ':' + ('00' + date.getMinutes()).slice(-2) + ':' + ('00' + date.getSeconds()).slice(-2)
@@ -117,6 +167,11 @@ export default {
     },
     isCurrent (start, end) {
       return !this.isPast(end) && !this.isFuture(start)
+    },
+    isToday (time) {
+      const t1 = new Date(this.now_time)
+      const t2 = new Date(time)
+      return t1.getFullYear() === t2.getFullYear() && t1.getMonth() === t2.getMonth() && t1.getDate() === t2.getDate()
     },
     isNearFuture (startTime, end) {
       const start = new Date(startTime)
