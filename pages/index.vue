@@ -21,6 +21,9 @@
             >
               <div>
                 <div class="font-weight-normal">
+                  <span v-if="isNearFuture(timer.starts_at, timer.ends_at)">
+                    開始まであと{{ getRemainSeconds(timer.starts_at) }}秒<br>
+                  </span>
                   {{ timeFormat(timer.starts_at) }}-{{ timeFormat(timer.ends_at) }}
                   <strong>{{ timer.title }}</strong><br>
                   <v-progress-linear v-if="isPast(timer.ends_at)" value="0" />
@@ -28,9 +31,6 @@
                   <v-progress-linear v-else :value="getPercent(timer.starts_at, timer.ends_at)" />
                   <span v-if="isCurrent(timer.starts_at, timer.ends_at)">
                     残り{{ getRemainSeconds(timer.ends_at) }}秒
-                  </span>
-                  <span v-if="isNearFuture(timer.starts_at, timer.ends_at)">
-                    開始まであと{{ getRemainSeconds(timer.starts_at) }}秒
                   </span>
                 </div>
               </div>
