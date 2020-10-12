@@ -1,6 +1,14 @@
 <template>
   <v-row justify="center" align="center">
     <v-col cols="12" sm="8" md="6">
+      <v-overlay :value="!!message">
+        <v-alert
+          dense
+          type="info"
+        >
+          {{ message }}
+        </v-alert>
+      </v-overlay>
       <v-card>
         <v-card-title class="headline">
           LT Timer
@@ -61,6 +69,9 @@
             <li>
               一度通知設定をしていれば、ブラウザを閉じていても通知されます
             </li>
+            <li>
+              アクティブ時（このページを閲覧している時）はページ内で通知され、非アクティブ時はプッシュ通知されます
+            </li>
           </ul>
         </v-card-text>
       </v-card>
@@ -97,7 +108,8 @@ export default {
     return {
       timers: [],
       now_time: null,
-      diff: null
+      diff: null,
+      message: ''
     }
   },
   beforeMount () {
@@ -119,6 +131,10 @@ export default {
       messaging.getToken().then((refreshedToken) => {
         this.postToken(refreshedToken)
       })
+    })
+    messaging.onMessage((payload) => {
+      this.message = '【' + payload.title + '】' + payload.body
+      setTimeout(this.clearMessage, 3000)
     })
   },
   mounted () {
@@ -203,6 +219,9 @@ export default {
       this.timers = response.data
       this.now_time = new Date()
       this.diff = diff
+    },
+    clearMessage () {
+      this.message = ''
     }
   }
 }
