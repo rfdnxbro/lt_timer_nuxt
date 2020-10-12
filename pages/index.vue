@@ -93,19 +93,15 @@ import firebase from 'firebase/app'
 import 'firebase/messaging'
 
 export default {
-  async asyncData ({ $axios }) {
-    const response = await $axios.get('https://lt-timer-go.herokuapp.com/api/timers')
-    const clientTime = new Date()
-    const serverTime = new Date(response.headers.date)
-    const diff = serverTime.getTime() - clientTime.getTime() + 1000 // 時刻の微妙なズレ1秒加算
-
+  data () {
     return {
-      timers: response.data,
-      now_time: new Date(),
-      diff
+      timers: [],
+      now_time: null,
+      diff: null
     }
   },
   beforeMount () {
+    this.setTime()
     const messaging = firebase.messaging()
     messaging.usePublicVapidKey('BDg0GzH0pqQQ_UG0aiLUqTff4t88Ke3rZlGfsj3BhnvZxmm-c-MeGKZYSB9LJgh66z5CeVW5Z_igjsfYD9o0FSE')
     messaging.requestPermission()
@@ -197,6 +193,16 @@ export default {
     async postToken (token) {
       const response = await this.$axios.$post('https://lt-timer-go.herokuapp.com/api/tokens', { token })
       return response
+    },
+    async setTime () {
+      const response = await this.$axios.get('https://lt-timer-go.herokuapp.com/api/timers')
+      const clientTime = new Date()
+      const serverTime = new Date(response.headers.date)
+      const diff = serverTime.getTime() - clientTime.getTime() + 1000 // 時刻の微妙なズレ1秒加算
+
+      this.timers = response.data
+      this.now_time = new Date()
+      this.diff = diff
     }
   }
 }
