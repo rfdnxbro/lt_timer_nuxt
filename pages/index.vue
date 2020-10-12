@@ -133,7 +133,7 @@ export default {
       })
     })
     messaging.onMessage((payload) => {
-      this.message = '【' + payload.title + '】' + payload.body
+      this.message = `【${payload.notification.title}】${payload.notification.body}`
       setTimeout(this.clearMessage, 3000)
     })
   },
